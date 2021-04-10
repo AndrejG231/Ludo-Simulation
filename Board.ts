@@ -9,7 +9,7 @@ class Board {
    */
 
   size: number;
-  board: string[][];
+  board: String[][];
   players: Player[];
 
   constructor(n: number) {
@@ -23,8 +23,12 @@ class Board {
     this.size = n;
     this.board = [
       new Array(n * 4 - 4).fill("*"),
-      ...new Array(4).fill(new Array((n - 3) / 2).fill("D")),
+      new Array((n - 3) / 2).fill("D"),
+      new Array((n - 3) / 2).fill("D"),
+      new Array((n - 3) / 2).fill("D"),
+      new Array((n - 3) / 2).fill("D"),
     ];
+    this.players = [];
   }
 
   toString() {
@@ -152,6 +156,10 @@ class Board {
     console.log(" " + this.toString().split("").join(" "));
   }
 
+  addPlayers(player: Player) {
+    this.players.push(player);
+  }
+
   handleMove(movingFigure: Figure, diceRoll: number) {
     for (const player of this.players) {
       if (player === movingFigure.player) {
@@ -179,6 +187,14 @@ class Board {
     }
   }
   update() {
+    this.board = [
+      new Array(this.size * 4 - 4).fill("*"),
+      new Array((this.size - 3) / 2).fill("D"),
+      new Array((this.size - 3) / 2).fill("D"),
+      new Array((this.size - 3) / 2).fill("D"),
+      new Array((this.size - 3) / 2).fill("D"),
+    ];
+
     for (const player of this.players) {
       for (const figure of player.figures) {
         figure.loadIntoBoard();

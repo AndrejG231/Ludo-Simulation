@@ -52,6 +52,22 @@ class Player {
   reachedFigureLimit() {
     return this.figures.length === this.maxFigures;
   }
+
+  hasWon() {
+    let winCheck = true;
+
+    if (this.figures.length === this.maxFigures) {
+      for (const figure of this.figures) {
+        if (!figure.isInHome()) {
+          winCheck = false;
+        }
+      }
+    } else {
+      winCheck = false;
+    }
+
+    return winCheck;
+  }
 }
 
 export default Player;

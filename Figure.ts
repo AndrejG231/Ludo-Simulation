@@ -8,8 +8,8 @@ class Figure {
 
   constructor(player: Player) {
     this.position = 0;
-    this.maxPosition = player.board[0].length + player.board[1].length - 1;
-    this.maxBoardPosition = player.board[0].length - 1;
+    this.maxPosition = player.board.size * 4 - 5 + (player.board.size - 3) / 2;
+    this.maxBoardPosition = player.board.size * 4 - 4;
     this.player = player;
   }
 
@@ -31,21 +31,22 @@ class Figure {
     figure can be moved
     */
 
-    if (nextPosition < this.maxPosition) {
+    if (nextPosition <= this.maxPosition) {
       return this.player.checkFreePosition(nextPosition);
     }
     return false;
   }
   isInHome() {
-    return this.position > this.maxBoardPosition;
+    return this.position >= this.maxBoardPosition;
   }
   loadIntoBoard() {
-    const board = this.player.board;
+    const board = this.player.board.board;
     //Method that loads current figure
     let boardIndex = 0;
-    let boardPosition = this.position + this.player.offset;
+    let boardPosition =
+      (this.position + this.player.offset) % this.maxBoardPosition;
 
-    if (this.isInHome) {
+    if (this.isInHome()) {
       boardIndex = this.player.position + 1;
       boardPosition = this.position - this.maxBoardPosition;
     }
