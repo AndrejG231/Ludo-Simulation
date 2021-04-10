@@ -15,12 +15,26 @@ const main = (n: number) => {
 
       //Checking possible moves for each players figure, moving if possible
       for (const figure of onTurn.figures) {
-        if (figure.canMoveInHouse(rolledNumber)) {
+        /*
+        First checking if it is possible to get into house or move inside
+        house to further position
+        */
+        if (figure.canMove(rolledNumber)) {
           figure.move(rolledNumber);
           playerDidMove = true;
           break;
         }
       }
+      if (!playerDidMove && rolledNumber === 6 && onTurn.reachedFigureLimit()) {
+        //If no figures could be moved and we threw 6 we want to add another figure.
+        onTurn.addFigure();
+        playerDidMove = true;
+      }
+
+      if(playerDidMove){
+        board.update();
+      }
     }
   }
 };
+

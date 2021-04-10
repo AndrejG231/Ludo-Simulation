@@ -14,21 +14,43 @@ class Figure {
   }
 
   move(diceRoll: number) {
-    this.position += diceRoll;
+    this.position = this.position + diceRoll;
+    //Adding figure position
+    if (this.position <= this.maxBoardPosition) {
+      //If next position is not in house, check if other player's figures can be kicked
+      this.player.board.handleMove(this, diceRoll);
+      //Removing other players figures on the spot
+    }
   }
 
-  canMoveInHouse(diceRoll: number) {
+  canMove(diceRoll: number) {
     const nextPosition = this.position + diceRoll;
 
-    //If figure is already home and next position is not over board limits:
-    if (
-      this.position > this.maxBoardPosition &&
-      nextPosition <= this.maxPosition
-    ) {
-      //Check if no other figure is in nextPosition:
+    /*
+    If nextPosition is in board and no other players figure is there,
+    figure can be moved
+    */
+
+    if (nextPosition < this.maxPosition) {
       return this.player.checkFreePosition(nextPosition);
     }
     return false;
+  }
+  isInHome() {
+    return this.position > this.maxBoardPosition;
+  }
+  loadIntoBoard() {
+    const board = this.player.board;
+    //Method that loads current figure
+    let boardIndex = 0;
+    let boardPosition = this.position + this.player.offset;
+
+    if (this.isInHome) {
+      boardIndex = this.player.position + 1;
+      boardPosition = this.position - this.maxBoardPosition;
+    }
+
+    board[boardIndex][boardPosition] = this.player.symbol;
   }
 }
 

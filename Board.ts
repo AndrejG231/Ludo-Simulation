@@ -1,3 +1,5 @@
+import Figure from "./Figure";
+import Player from "./Player";
 import { getColumnSpacer } from "./utility";
 
 class Board {
@@ -8,6 +10,7 @@ class Board {
 
   size: number;
   board: string[][];
+  players: Player[];
 
   constructor(n: number) {
     if (n % 2 === 0) {
@@ -147,6 +150,40 @@ class Board {
 
   print() {
     console.log(" " + this.toString().split("").join(" "));
+  }
+
+  handleMove(movingFigure: Figure, diceRoll: number) {
+    for (const player of this.players) {
+      if (player === movingFigure.player) {
+        continue;
+      }
+      for (const figure of player.figures) {
+        if (
+          !figure.isInHome() &&
+          figure.position + player.offset ===
+            movingFigure.position + diceRoll + movingFigure.player.offset
+        ) {
+          console.log(
+            `${movingFigure.player.displayName} kicked ${player.displayName}'s figure!`
+          );
+          player.removeFigure(figure);
+        }
+        /*
+        Figures are on same position on board if sum of their position and
+        player offset are the same
+
+        
+        ** Players 1 figure on position 30 is opposite side to Players 3 figure.
+        */
+      }
+    }
+  }
+  update() {
+    for (const player of this.players) {
+      for (const figure of player.figures) {
+        figure.loadIntoBoard();
+      }
+    }
   }
 }
 
